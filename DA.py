@@ -5,12 +5,13 @@ import numpy as np
 import matplotlib
 import pandas as pd
 matplotlib.use('Agg')
-%matplotlib inline
+#%matplotlib inline
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 url = 'https://raw.githubusercontent.com/04204/DS/main/%E4%BE%86%E5%8F%B0%E7%9B%AE%E7%9A%84.csv'
 df1 = pd.read_csv(url, header=0)
 month = 1
+df_total = pd.DataFrame(columns = ['居住地','合計','業務','觀光','探親','會議','求學','展覽','醫療','其他','時間'])
 year = 108
 目的 = ['業務','觀光','探親','會議','求學','展覽','醫療','其他']
 while(year <= 111):
@@ -22,8 +23,31 @@ while(year <= 111):
         else:
             time = str(year)+'/0'+str(month)
         month += 1
-        plt = px.bar(df1[df1['時間']==time], x='居住地', y=目的, barmode='group',title=f'各大洲來台目的 {time}').update_layout(yaxis_title="人數",legend_title_text="目的")
-        plt.show()
+        df2 = df1[df1['時間']==time]
+        #print(df2.sum(numeric_only=True))
+        #plt = px.bar(df1[df1['時間']==time], x='居住地', y=目的, barmode='group',title=f'各大洲來台目的 {time}').update_layout(yaxis_title="人數",legend_title_text="目的")
+        #plt.show()
+
+    month = 1
+    year += 1
+    
+year = 108
+month = 1
+while(year <= 111):
+    while(month <= 12):
+        if(year==111 and month >10):
+            break
+        if month >= 10:
+            time = str(year)+'/'+str(month)
+        else:
+            time = str(year)+'/0'+str(month)
+        month += 1
+        df2 = df1[df1['時間']==time]
+        
+        df_total.loc[len(df_total)] = ['總計',df2['合計'].sum(),df2['業務'].sum(),df2['觀光'].sum(),df2['探親'].sum(),df2['會議'].sum(),df2['求學'].sum(),df2['展覽'].sum(),df2['醫療'].sum(),df2['其他'].sum(),time]
+        #print(df_total)
         
     month = 1
     year += 1
+df3 = df1.sum(numeric_only=True)
+print(df3)
